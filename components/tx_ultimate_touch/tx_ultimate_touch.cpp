@@ -124,7 +124,18 @@ namespace esphome
                 return true;
             }
 
+            const uint32_t now = millis();
+            if (this->has_last_release_ && this->release_debounce_ms_ > 0 &&
+                now - this->last_release_ms_ < this->release_debounce_ms_)
+            {
+                ESP_LOGD(TAG, "Ignoring repeated release within debounce window");
+                this->has_pending_press_ = false;
+                return true;
+            }
+
             this->has_pending_press_ = false;
+            this->last_release_ms_ = now;
+            this->has_last_release_ = true;
             return false;
         }
 

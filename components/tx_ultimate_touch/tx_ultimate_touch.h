@@ -42,6 +42,10 @@ namespace esphome
             {
                 this->require_press_before_release_ = require_press_before_release;
             }
+            void set_release_debounce(uint32_t release_debounce_ms)
+            {
+                this->release_debounce_ms_ = release_debounce_ms;
+            }
 
             void setup() override;
             void loop() override;
@@ -66,6 +70,9 @@ namespace esphome
             Trigger<TouchPoint> long_touch_release_trigger_;
             bool require_press_before_release_{false};
             bool has_pending_press_{false};
+            uint32_t release_debounce_ms_{0};
+            uint32_t last_release_ms_{0};
+            bool has_last_release_{false};
 
         }; // class TxUltimateTouch
 
