@@ -59,6 +59,19 @@ This repository contains only the **custom component** and a minimal [component_
 ## Use the custom component (external)
 
 ```
+
+### Filter orphaned release events
+
+Set `require_press_before_release: true` when a touch panel emits release
+events without a preceding press. This is disabled by default to preserve
+existing installations.
+
+```
+tx_ultimate_touch:
+  id: tx_touch
+  uart: my_uart
+  require_press_before_release: true
+```
 external_components:
   - source:
       type: git
@@ -526,4 +539,3 @@ This is a simple example to turn the LEDs on and off, which are defined in the p
   on_release:
     - light.turn_off: leds
 ```
-

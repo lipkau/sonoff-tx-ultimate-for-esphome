@@ -43,3 +43,4 @@ uart:
 
 tx_ultimate_touch:
   uart: my_uart
+  require_press_before_release: true

@@ -23,6 +23,7 @@ CONF_ON_SWIPE_RIGHT = "on_swipe_right"
 
 CONF_ON_FULL_TOUCH_RELEASE = "on_full_touch_release"
 CONF_ON_LONG_TOUCH_RELEASE = "on_long_touch_release"
+CONF_REQUIRE_PRESS_BEFORE_RELEASE = "require_press_before_release"
 
 # ------------------------------
 # ------------------------------
@@ -43,6 +44,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(TxUltimateTouch),
 
     cv.Required(CONF_UART): cv.use_id(uart),
+    cv.Optional(CONF_REQUIRE_PRESS_BEFORE_RELEASE, default=False): cv.boolean,
 
     cv.Optional(CONF_ON_PRESS): automation.validate_automation(single=True),
     cv.Optional(CONF_ON_RELEASE): automation.validate_automation(single=True),
@@ -60,6 +62,7 @@ CONFIG_SCHEMA = cv.Schema({
 async def register_tx_ultimate_touch(var, config):
     uart_component = await cg.get_variable(config[CONF_UART])
     cg.add(var.set_uart_component(uart_component))
+    cg.add(var.set_require_press_before_release(config[CONF_REQUIRE_PRESS_BEFORE_RELEASE]))
 
     if CONF_ON_PRESS in config:
         await automation.build_automation(

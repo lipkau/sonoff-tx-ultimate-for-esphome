@@ -72,17 +72,26 @@ namespace esphome
                 if (tp.x >= 17)
                 {
                     tp.x = tp.x - 16;
+                    if (this->is_orphaned_release_())
+                    {
+                        break;
+                    }
                     ESP_LOGD(TAG, "Long Press Release (x=%d)", tp.x);
                     this->long_touch_release_trigger_.trigger(tp);
                 }
                 else
                 {
+                    if (this->is_orphaned_release_())
+                    {
+                        break;
+                    }
                     ESP_LOGD(TAG, "Release (x=%d)", tp.x);
                     this->release_trigger_.trigger(tp);
                 }
                 break;
 
             case TOUCH_STATE_PRESS:
+                this->has_pending_press_ = true;
                 ESP_LOGD(TAG, "Press (x=%d)", tp.x);
                 this->touch_trigger_.trigger(tp);
                 break;
@@ -105,6 +114,18 @@ namespace esphome
             default:
                 break;
             }
+        }
+
+        bool TxUltimateTouch::is_orphaned_release_()
+        {
+            if (this->require_press_before_release_ && !this->has_pending_press_)
+            {
+                ESP_LOGD(TAG, "Ignoring release without a preceding press");
+                return true;
+            }
+
+            this->has_pending_press_ = false;
+            return false;
         }
 
         bool TxUltimateTouch::is_valid_data(int bytes[])

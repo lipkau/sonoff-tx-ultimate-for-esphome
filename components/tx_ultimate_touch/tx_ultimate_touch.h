@@ -38,6 +38,10 @@ namespace esphome
             {
                 this->set_uart_parent(uart_component);
             }
+            void set_require_press_before_release(bool require_press_before_release)
+            {
+                this->require_press_before_release_ = require_press_before_release;
+            }
 
             void setup() override;
             void loop() override;
@@ -52,12 +56,16 @@ namespace esphome
             int get_x_touch_position(int bytes[]);
             int get_touch_state(int bytes[]);
 
+            bool is_orphaned_release_();
+
             Trigger<TouchPoint> touch_trigger_;
             Trigger<TouchPoint> release_trigger_;
             Trigger<TouchPoint> swipe_trigger_left_;
             Trigger<TouchPoint> swipe_trigger_right_;
             Trigger<TouchPoint> full_touch_release_trigger_;
             Trigger<TouchPoint> long_touch_release_trigger_;
+            bool require_press_before_release_{false};
+            bool has_pending_press_{false};
 
         }; // class TxUltimateTouch
 
